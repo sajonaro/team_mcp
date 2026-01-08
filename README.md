@@ -128,7 +128,7 @@ Add Team MCP to your [Cline](https://github.com/cline/cline) MCP settings file:
 }
 ```
 
-> **Tip:** With pipx, the package is installed in an isolated environment but `python` usually works because pipx manages the paths. If you encounter issues, find the exact path with: `pipx list --include-injected`
+> **Tip:** If you get a "ModuleNotFoundError: No module named 'team_mcp'" error, you need to use the absolute path to the Python where team_mcp is installed. See the [Troubleshooting](#troubleshooting) section below.
 
 ### 2. Start Using Team MCP
 
@@ -479,6 +479,91 @@ Contributions are welcome! This is an MVP implementation with room for enhanceme
 ## License
 
 MIT
+
+## Troubleshooting
+
+### ModuleNotFoundError: No module named 'team_mcp'
+
+**Error message:**
+```
+/usr/sbin/python: Error while finding module specification for 'team_mcp.server' 
+(ModuleNotFoundError: No module named 'team_mcp')
+```
+
+**Cause:** Cline is using a different Python interpreter than where you installed team_mcp.
+
+**Solution:** Use the absolute path to the Python interpreter where team_mcp is installed.
+
+#### Find the Correct Python Path
+
+```bash
+# Find where team_mcp is installed
+python -c "import team_mcp; print(team_mcp.__file__)"
+# Example output: /root/.pyenv/versions/3.11.13/lib/python3.11/site-packages/team_mcp/__init__.py
+
+# The Python path is the same directory but /bin/python
+# So if team_mcp is in: /root/.pyenv/versions/3.11.13/lib/python3.11/site-packages/
+# Use Python path:     /root/.pyenv/versions/3.11.13/bin/python
+```
+
+#### Or use this one-liner to get the exact path:
+
+```bash
+python -c "import sys; print(sys.executable)"
+```
+
+#### Update MCP Settings
+
+Use the absolute path in your MCP settings:
+
+```json
+{
+  "mcpServers": {
+    "team-mcp": {
+      "command": "/root/.pyenv/versions/3.11.13/bin/python",
+      "args": ["-m", "team_mcp.server"]
+    }
+  }
+}
+```
+
+**Common paths:**
+- **pyenv**: `/root/.pyenv/versions/X.Y.Z/bin/python`
+- **system**: `/usr/bin/python3`
+- **venv**: `~/.venvs/team-mcp/bin/python`
+- **pipx**: Find with `pipx environment`
+
+#### For pipx users:
+
+If using pipx, you can find the Python path:
+
+```bash
+# Find pipx's Python for team-mcp
+pipx list --verbose | grep -A 5 team-mcp
+
+# Or use pipx's Python directly
+python_path=$(pipx environment | grep "PIPX_SHARED_LIBS" | cut -d= -f2)/bin/python
+```
+
+### Connection Issues
+
+If the MCP server fails to connect:
+
+1. **Check the server runs manually:**
+   ```bash
+   python -m team_mcp.server
+   # Should start the MCP server without errors
+   ```
+
+2. **Check Cline logs:**
+   - Open VS Code Developer Tools (Help → Toggle Developer Tools)
+   - Look for MCP connection errors in the Console
+
+3. **Verify settings file location:**
+   ```bash
+   # Find your settings file
+   find ~ -name "cline_mcp_settings.json" 2>/dev/null
+   ```
 
 ## Credits
 
