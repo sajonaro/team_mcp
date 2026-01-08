@@ -1,0 +1,54 @@
+version: 1
+
+# Workflow — always explicit, no magic presets
+workflow:
+  sequence:
+    - role: ba
+      type: analyst
+    - role: architect
+      type: designer
+    - role: coder
+      type: implementer
+    - role: qa
+      type: gatekeeper
+    - role: reviewer
+      type: gatekeeper
+  
+  max_iterations: 5
+  
+  # When to offer architect rebound
+  rebound:
+    after_failures: 3
+  
+  on_max_iterations: escalate   # escalate | fail
+
+# Global rules (injected into ALL roles)
+rules:
+  - "No TODO/FIXME in final code"
+  - "No placeholder implementations"
+  - "All existing tests must pass"
+  - "Show real output, not hypothetical"
+  - "If you break something, fix it before submitting"
+
+# Context to load per role
+context:
+  always:
+    - .team/context/*.md
+  ba:
+    - README.md
+  architect:
+    - README.md
+  coder: []
+  qa: []
+  reviewer: []
+
+# Git integration
+git:
+  mode: branch                  # branch | current | none
+  branch_prefix: "team/"
+  commit_message_format: "team({role}): {summary}"
+
+# Output settings  
+output:
+  runs_dir: .team/runs
+  verbose: true

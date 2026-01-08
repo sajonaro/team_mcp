@@ -1,0 +1,37 @@
+[project]
+name = "team-mcp"
+version = "0.1.0"
+description = "A state machine MCP server that guides Claude through focused roles with quality gates"
+authors = [
+    {name = "Team MCP Contributors"}
+]
+requires-python = ">=3.10"
+dependencies = [
+    "mcp>=0.9.0",
+    "pyyaml>=6.0",
+    "rich>=13.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "mypy>=1.0.0",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+team_mcp = [
+    "defaults/**/*.yaml",
+    "defaults/**/*.md",
+]
+
+[project.scripts]
+team-mcp = "team_mcp.server:main"
