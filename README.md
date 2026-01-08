@@ -46,10 +46,10 @@ sudo apt install pipx
 sudo dnf install pipx
 
 # Install Team MCP from GitHub
-pipx install git+https://github.com/sajonaro/team-mcp.git
+pipx install git+https://github.com/sajonaro/team_mcp.git
 
 # Or install a specific version
-pipx install git+https://github.com/sajonaro/team-mcp.git@v0.1.0
+pipx install git+https://github.com/sajonaro/team_mcp.git@v0.1.0
 ```
 
 **Why pipx?**
@@ -72,14 +72,14 @@ source ~/.venvs/team-mcp/bin/activate  # On Linux/macOS
 # or on Windows: ~/.venvs/team-mcp/Scripts/activate
 
 # Install Team MCP
-pip install git+https://github.com/sajonaro/team-mcp.git
+pip install git+https://github.com/sajonaro/team_mcp.git
 ```
 
 ### For Development
 
 ```bash
 # Clone the repository
-git clone https://github.com/sajonaro/team-mcp.git
+git clone https://github.com/sajonaro/team_mcp.git
 cd team-mcp
 
 # Install in development mode
