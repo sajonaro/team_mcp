@@ -27,23 +27,55 @@ Each agent acts as an adversarial reviewer, not just a worker. Code doesn't prog
 
 ## Installation
 
-### Option 1: Install from GitHub (Recommended for Users)
+### Recommended: Using pipx (Best for MCP servers)
+
+[pipx](https://pipx.pypa.io/) installs Python applications in isolated environments while making them globally available. This is the recommended method for installing MCP servers.
 
 ```bash
-# Install directly from GitHub
+# Install pipx if you don't have it
+# On macOS
+brew install pipx
+
+# On Linux (Arch)
+sudo pacman -S python-pipx
+
+# On Linux (Debian/Ubuntu)
+sudo apt install pipx
+
+# On Linux (Fedora)
+sudo dnf install pipx
+
+# Install Team MCP from GitHub
+pipx install git+https://github.com/sajonaro/team-mcp.git
+
+# Or install a specific version
+pipx install git+https://github.com/sajonaro/team-mcp.git@v0.1.0
+```
+
+**Why pipx?**
+- ✅ Isolated environment (won't conflict with system packages)
+- ✅ Globally available command
+- ✅ Works on externally-managed environments (modern Linux)
+- ✅ Easy to update: `pipx upgrade team-mcp`
+- ✅ Easy to uninstall: `pipx uninstall team-mcp`
+
+### Alternative: Using pip with Virtual Environment
+
+If you prefer pip or already have a virtual environment setup:
+
+```bash
+# Create a virtual environment
+python -m venv ~/.venvs/team-mcp
+
+# Activate it
+source ~/.venvs/team-mcp/bin/activate  # On Linux/macOS
+# or on Windows: ~/.venvs/team-mcp/Scripts/activate
+
+# Install Team MCP
 pip install git+https://github.com/sajonaro/team-mcp.git
-
-# Or install a specific version/tag
-pip install git+https://github.com/sajonaro/team-mcp.git@v0.1.0
 ```
 
-### Option 2: Install from PyPI (When Published)
-
-```bash
-pip install team-mcp
-```
-
-### Option 3: Install from Source (For Development)
+### For Development
 
 ```bash
 # Clone the repository
@@ -52,17 +84,27 @@ cd team-mcp
 
 # Install in development mode
 pip install -e .
-
-# Or build and install
-pip install .
 ```
 
 ## Quick Start
 
 ### 1. Configure MCP Server
 
-Add Team MCP to your MCP settings (e.g., `(~/.vscode-server/data/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json)`):
+Add Team MCP to your [Cline](https://github.com/cline/cline) MCP settings file:
 
+**Find your settings file:**
+```bash
+# For VS Code Server (Remote)
+~/.vscode-server/data/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json
+
+# For VS Code (Linux)
+~/.config/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json
+
+# For VS Code (macOS)
+~/Library/Application Support/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json
+```
+
+**If you installed with pipx:**
 ```json
 {
   "mcpServers": {
@@ -73,6 +115,20 @@ Add Team MCP to your MCP settings (e.g., `(~/.vscode-server/data/User/globalStor
   }
 }
 ```
+
+**If you installed with pip in a virtual environment:**
+```json
+{
+  "mcpServers": {
+    "team-mcp": {
+      "command": "/home/YOUR_USER/.venvs/team-mcp/bin/python",
+      "args": ["-m", "team_mcp.server"]
+    }
+  }
+}
+```
+
+> **Tip:** With pipx, the package is installed in an isolated environment but `python` usually works because pipx manages the paths. If you encounter issues, find the exact path with: `pipx list --include-injected`
 
 ### 2. Start Using Team MCP
 
